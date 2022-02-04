@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <style>
+        #popupWrap {
+            background: #fff;
+            width: 500px;
+            margin: 2rem;
+            box-shadow: rgb(0 0 0 / 20%) 0px 10px 50px -5px;
+            padding: 1rem;
+        }
+
+        #popupWrap img {
+            width: 100%;
+            max-width: 500px;
+            vertical-align: bottom;
+        }
+
+        .popupBottom {
+            border-top: 1px solid #ddd;
+            padding: 10px 0 0;
+            overflow: hidden;
+        }
+
+        .popupBottom::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        .popupBottom .left {
+            float: left;
+        }
+
+        .popupBottom .right {
+            float: right;
+        }
+
+        .popupBottom a {
+            padding: 10px;
+            border: 1px solid #000;
+            text-decoration: none;
+            color: #333;
+            display: inline-block;
+        }
+    </style>
+    <title>팝업창</title>
+</head>
+
+<body>
+    <h1>POPUP TEST</h1>
+    <button id="clear">clear cookie</button>
+    <div id="popupWrap">
+        <div class="popupCont">
+            <img src="./popup-design.png" alt="이미지 넣어주세요.">
+        </div>
+        <div class="popupBottom">
+            <div class="left">
+                <a href="#" id="oneDay">오늘만 안 보기</a>
+                <a href="#" id="oneWeek">일주일 동안 안 보기</a>
+            </div>
+            <div class="right">
+                <a href="#" id="close">닫기</a>
+            </div>
+        </div>
+    </div>
+    <!-- <script src="./app.js"></script> -->
+    <script>
+        function getToday() {
+            let date = new Date();
+            let year = date.getFullYear();
+            let month = ("0" + (1 + date.getMonth())).slice(-2);
+            let day = ("0" + date.getDate()).slice(-2);
+            return year + month + day;
+        }
+
+        const today = getToday();
+
+        $(document).ready(function () {
+            if ($.cookie('popup') >= today) {
+                $('#popupWrap').hide();
+            }
+        });
+
+        // one day
+
+        $('#oneDay').on('click', function () {
+            $.cookie('popup', Number(today), {
+                expires: 1,
+                path: '/',
+                secure: false
+            });
+            $(this).parents('#popupWrap').hide();
+        });
+
+        // one week
+
+        $('#oneWeek').on('click', function () {
+            $.cookie('popup', Number(today) + 7, {
+                expires: 7,
+                path: '/',
+                secure: false
+            });
+            $(this).parents('#popupWrap').hide();
+        });
+
+        // close
+
+        $('#close').on('click', function () {
+            $(this).parents('#popupWrap').hide();
+        });
+
+        // clean
+
+        $('#clear').on('click', function () {
+            $.removeCookie("popup");
+            alert('cookie clear !');
+            history.go(0);
+        });
+    </script>
+</body>
+
+</html>
